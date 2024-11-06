@@ -10,22 +10,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '../ui/input'
 
 interface Song {
-<<<<<<< HEAD
-    id: number
-=======
     id: string
->>>>>>> beta
     title: string
     artist: string
     album: string
     cover: string
     audio: string
     lyrics: string
-<<<<<<< HEAD
-    bytes: number
-=======
     bytes: string
->>>>>>> beta
     updated_at: string
 }
 
