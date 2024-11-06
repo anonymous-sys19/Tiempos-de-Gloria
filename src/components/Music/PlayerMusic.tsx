@@ -10,14 +10,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '../ui/input'
 
 interface Song {
-    id: number
+    id: string
     title: string
     artist: string
     album: string
     cover: string
     audio: string
     lyrics: string
-    bytes: number
+    bytes: string
     updated_at: string
 }
 
