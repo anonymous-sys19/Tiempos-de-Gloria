@@ -48,65 +48,6 @@ const getInitials = (name: string): string => {
 }
 
 
-<<<<<<< HEAD
-const menuItems = [
-  {
-    name: 'Inicio',
-    path: '/',
-    icon: <Home className="mr-4 h-6 w-6" />,
-    isButton: true,
-  },
-  {
-    name: 'Ministerios',
-    icon: <Users className="mr-4 h-6 w-6" />,
-    dropdown: [
-      { name: 'Ministerio del adulto mayor', path: '/adulto-mayor' },
-      { name: 'Ministerio de Caballeros', path: '/caballeros' },
-      { name: 'Ministerio de Damas', path: '/damas' },
-      { name: 'G Emergente', path: '/g-emergente' },
-      { name: 'GE Junior', path: '/ge-junior' },
-      { name: 'Iglesia Infantil', path: '/iglesia-infantil' },
-      { name: 'Ministerio Matrimonio y familia', path: '/matrimonio-familia' },
-    ],
-  },
-  {
-    name: 'Quienes somos',
-    icon: <Grid className="mr-4 h-6 w-6" />,
-    dropdown: [
-      { name: 'Historia', path: '/historia' },
-      { name: 'Conexión 20/30', path: '/conexion' },
-      { name: 'Misión y Visión', path: '/mision-vision' },
-      { name: 'Declaración de Fe', path: '/declaracion' },
-      { name: 'Principios Doctrinales', path: '/doctrinales' },
-      { name: 'Principios Prácticos', path: '/practicos' },
-      { name: 'Estructura', path: '/estructura' },
-    ],
-  },
-  {
-    name: 'Marketplace',
-    path: '/marketplace',
-    icon: <ShoppingBag className="mr-4 h-6 w-6" />,
-    isButton: true,
-  },
-  {
-    name: 'PlayList Song',
-    path: '/playlist-music',
-    icon: <PlayCircle className="mr-4 h-6 w-6" />,
-    isButton: true,
-  },
-  {
-    name: 'Ver más',
-    icon: <Menu className="mr-4 h-6 w-6" />,
-    dropdown: [
-      { name: 'Guardado', path: '/guardado' },
-      { name: 'Páginas', path: '/paginas' },
-      { name: 'Eventos', path: '/eventos' },
-      { name: 'Recuerdos', path: '/recuerdos' },
-    ],
-  },
-]
-=======
->>>>>>> beta
 
 
 
@@ -118,15 +59,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navigate = useNavigate()
 
-<<<<<<< HEAD
-  const handleNavigation = (e: { preventDefault: () => void }, path: string) => {
-    e.preventDefault()  // Evita la recarga
-    navigate(path)  // Navega a la ruta sin recargar
-=======
   const handleNavigation = (e: { preventDefault: () => void }) => {
     e.preventDefault()  // Evita la recarga
     navigate("/historia")  // Navega a la ruta sin recargar
->>>>>>> beta
 
   }
 

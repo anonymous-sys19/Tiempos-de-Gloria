@@ -2,7 +2,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { FileText, Newspaper, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-<<<<<<< HEAD
 
 import React, { useEffect, useState, useRef } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -12,15 +11,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { Image as ImageIcon, Smile, Send } from 'lucide-react'
 import { useAuth } from "@/hooks/userAuth"
-=======
-import React, { useEffect, useState } from 'react'
->>>>>>> beta
 import { supabase } from '@/supabaseClient'
 import { useNavigate } from 'react-router-dom'
 import { Layout } from './Loyout'
 import { Post } from './Post'
 import BlogPage from './DayliVerse/PostDayliVerse'
-<<<<<<< HEAD
 // import CombinedPosts from './Posts/PostsAll'
 import { useToast } from "@/hooks/use-toast"
 import { nanoid } from 'nanoid'
@@ -42,13 +37,6 @@ const getInitials = (name: string): string => {
 }
 
 // Interfaces
-=======
-import UseUploading from './UploadingFiles/UseUploading'
-// Rutas y bukets
-const SUPABASE_URL = 'https://janbrtgwtomzffqqcmfo.supabase.co'
-const STORAGE_BUCKET = 'idec-public'
-
->>>>>>> beta
 interface Post {
   likes: number
   id: string; // Añadimos un id único
@@ -62,7 +50,6 @@ interface Post {
   slug: string; // Añadimos un slug único para compartir
 }
 
-<<<<<<< HEAD
 interface ImageFile extends File {
   preview: string
 }
@@ -79,26 +66,13 @@ export default function Dashboard() {
   const [hashtags, setHashtags] = useState<string[]>([])
   const [isUploading, setIsUploading] = useState(false)
   // Componentes de contenido
-=======
-export default function Dashboard() {
-
-  const [posts, setPosts] = useState<Post[]>([])
-  const navigate = useNavigate()
-
->>>>>>> beta
   const PublicacionesComponent: React.FC = () => (
     <div className=" bg-white dark:bg-gray-800 rounded-lg shadow-lg">
       {
         posts.map((post) => (
-<<<<<<< HEAD
           <>
             <Post key={post.name} post={{ ...post, likes: post.likes || 0 }} onUserClick={handleUserClick} />
           </>
-=======
-
-          <Post key={post.id} post={{ ...post, likes: post.likes || 0 }} onUserClick={handleUserClick} />
-
->>>>>>> beta
         ))
       }
 
@@ -114,19 +88,11 @@ export default function Dashboard() {
   type MenuOption = 'publicaciones' | 'dayliverse';
 
   const MenuButton: React.FC<{
-<<<<<<< HEAD
     active: boolean ;
     onClick: () => void;
     icon: React.ReactNode;
     label: string;
   }> = ({ active, onClick, icon, label}) => (
-=======
-    active: boolean;
-    onClick: () => void;
-    icon: React.ReactNode;
-    label: string;
-  }> = ({ active, onClick, icon, label }) => (
->>>>>>> beta
     <button
       onClick={onClick}
       className={cn(
@@ -140,11 +106,7 @@ export default function Dashboard() {
       <span className="font-medium">{label}</span>
       <ChevronRight className={cn("ml-auto transition-transform", active && "transform rotate-90")} />
     </button>
-<<<<<<< HEAD
     
-=======
-
->>>>>>> beta
   );
 
   useEffect(() => {
@@ -237,7 +199,6 @@ export default function Dashboard() {
     navigate(`/profile/${userId}`)
   }
 
-<<<<<<< HEAD
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
 
@@ -367,8 +328,6 @@ export default function Dashboard() {
   }
 
 
-=======
->>>>>>> beta
   const [activeMenu, setActiveMenu] = useState<MenuOption>('publicaciones');
 
   const renderContent = () => {
@@ -385,7 +344,6 @@ export default function Dashboard() {
         );
     }
   };
-<<<<<<< HEAD
 
   return (
     <Layout>
@@ -471,12 +429,6 @@ export default function Dashboard() {
 
 
 
-=======
-  return (
-    <Layout>
-      <div className="max-w-2xl mx-auto">
-        <UseUploading /> {/*Aqui renderizo el componente para subir mis elementos a supabase.... */}
->>>>>>> beta
         <div className="max-w-4xl mx-auto p-4">
           <div className="flex flex-col">
             <div className="flex space-x-2 mb-4">
@@ -506,16 +458,12 @@ export default function Dashboard() {
             </AnimatePresence>
           </div>
         </div>
-<<<<<<< HEAD
 
 
 
 
       </div>
       
-=======
-      </div>
->>>>>>> beta
     </Layout>
   )
 }
