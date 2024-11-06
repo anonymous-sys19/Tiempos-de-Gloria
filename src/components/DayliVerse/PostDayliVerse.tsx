@@ -23,14 +23,16 @@ type Contributor = {
   referencia?: string;
 };
 
-export default function BlogPage() {
+const BlogPage: React.FC = () => {
+
+
   const [verse, setVerse] = useState<string>('');
   const [reference, setReference] = useState<string>('');
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
   const { user } = useAuth();
- 
+
   const scriptLoadedRef = useRef(false);
   const dataSavedRef = useRef(false);
   
@@ -42,7 +44,7 @@ export default function BlogPage() {
       wrapper.style.display = 'none';
       wrapper.innerHTML = '<p class="dailyVerses"></p><a></a>';
       document.body.appendChild(wrapper);
-
+      
       const script = document.createElement('script');
       script.src = 'https://dailyverses.net/get/verse.js?language=nvi';
       script.async = true;
@@ -51,35 +53,35 @@ export default function BlogPage() {
       script.onload = () => {
         const verseElement = document.querySelector('#dailyVersesWrapper .dailyVerses');
         const referenceElement = document.querySelector('#dailyVersesWrapper a');
-        
+
         if (verseElement && referenceElement) {
           const verseText = verseElement.textContent?.trim() || '';
           const referenceText = referenceElement.textContent?.trim() || '';
-
+          
           setVerse(verseText);
           setReference(referenceText);
           scriptLoadedRef.current = true;
-
+          
           // Remove the wrapper after getting the verse
           document.body.removeChild(wrapper);
         }
       };
-      
+
       document.body.appendChild(script);
     }
   }, []);
-  
+
   useEffect(() => {
     const saveVerseToSupabase = async () => {
       if (verse && reference && !dataSavedRef.current) {
         try {
           // Check if the verse already exists
           const { data: existingData, error: existingError } = await supabase
-            .from('idectableimages')
-            .select('id, pasaje, referencia')
-            .eq('pasaje', verse)
-            .eq('referencia', reference);
-
+          .from('idectableimages')
+          .select('id, pasaje, referencia')
+          .eq('pasaje', verse)
+          .eq('referencia', reference);
+          
           if (existingError) {
             throw existingError;
           }
@@ -89,41 +91,41 @@ export default function BlogPage() {
             if (existingData.length > 1) {
               const [...remove] = existingData;
               const removeIds = remove.map(item => item.id);
-
+              
               const { error: deleteError } = await supabase
-                .from('idectableimages')
-                .delete()
-                .in('id', removeIds);
-                
-                if (deleteError) {
-                  throw deleteError;
-                }
-              }
-              console.log("Verse already exists, duplicates removed if any");
-            } else {
-              // Verse doesn't exist, insert it
-              const { data, error } = await supabase
               .from('idectableimages')
-              .insert({
-                pasaje: verse,
-                referencia: reference,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-              })
-              .select()
-              .single();
+              .delete()
+              .in('id', removeIds);
               
-              if (error) {
-                throw error;
+              if (deleteError) {
+                throw deleteError;
               }
-              
-              console.log("Verse saved successfully:", data);
+            }
+            console.log("Verse already exists, duplicates removed if any");
+          } else {
+            // Verse doesn't exist, insert it
+            const { data, error } = await supabase
+            .from('idectableimages')
+            .insert({
+              pasaje: verse,
+              referencia: reference,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            })
+            .select()
+            .single();
+            
+            if (error) {
+              throw error;
             }
             
-            dataSavedRef.current = true;
-            await fetchContributors(); // Refresh the contributors list
-          } catch (error) {
-            console.error("Error in Supabase operation:", error);
+            console.log("Verse saved successfully:", data);
+          }
+          
+          dataSavedRef.current = true;
+          await fetchContributors(); // Refresh the contributors list
+        } catch (error) {
+          console.error("Error in Supabase operation:", error);
         }
       }
     };
@@ -135,7 +137,7 @@ export default function BlogPage() {
     try {
       setIsLoading(true);
       console.log('Intentando obtener datos de Supabase...');
-      
+
       const { data, error } = await supabase
       .from('idectableimages')
       .select('*', { count: 'exact' }) // Usar 'exact' para obtener el número de filas
@@ -148,7 +150,7 @@ export default function BlogPage() {
       if (error) {
         throw error;
       }
-      
+
       if (data && data.length > 0) {
         setContributors(data);
         console.log('Estados actualizados con éxito');
@@ -212,177 +214,186 @@ function ContributorCard({ item, user, formatExplanation }: { item: Contributor;
   const [isExplanationOpen, setIsExplanationOpen] = useState(false);
   const [isContributing, setIsContributing] = useState(false);
   const [contributedText, setContributedText] = useState('');
-
+  
   const handleContribute = () => {
     setIsContributing(true);
   };
-
+  
   const handleSubmitContribution = async () => {
     if (contributedText.trim() && item.id) {
       const { error } = await supabase
-        .from('idectableimages')
-        .update({
-          user_id: user?.id,
-          email: user?.user_metadata.email,
-          nameUser: user?.user_metadata.name,
-          avatarUrl: user?.user_metadata.avatar_url,
-          description: contributedText,
-          updated_at: new Date(),
-        })
+      .from('idectableimages')
+      .update({
+        user_id: user?.id,
+        email: user?.user_metadata.email,
+        nameUser: user?.user_metadata.name,
+        avatarUrl: user?.user_metadata.avatar_url,
+        description: contributedText,
+        updated_at: new Date(),
+      })
         .eq('id', item.id);
 
       if (error) {
         console.error('Error al subir la contribución:', error);
         return;
       }
-
-
+      
+      
       // Update the local state
       item.description = contributedText;
       item.nameUser = user?.user_metadata.name;
       item.avatarUrl = user?.user_metadata.avatar_url;
       item.updated_at = new Date().toISOString();
-
+      
       setIsContributing(false);
       setContributedText('');
-
-
+      
+      
       if (error) {
         console.error("Error:", error);
         return <p>Hubo un error al cargar los datos.</p>;
       }
-
+      
     }
   };
-
+  
+  
+  
   
   return (
+    
+    <>
 
-    <Card className="overflow-hidden mb-4 dark:bg-slate-900 ">
-      <CardHeader className="flex flex-row items-center gap-4">
-        <Avatar>
-          <AvatarImage src="/public/logo-idec.png" alt="Bible" />
-          <AvatarFallback>VD</AvatarFallback>
-        </Avatar>
-        <div>
-          <h2 className="text-lg font-semibold">IDEC Tiempos de gloria</h2>
-          <p className="text-sm text-gray-500">{dayjs(item.updated_at).format('MMM D, YYYY')}</p>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <blockquote className="border-l-4 border-indigo-500 pl-4 italic">
-          <p className="mb-2 text-lg">{item.pasaje}</p>
-          <footer className="text-sm text-gray-600">{item.referencia}</footer>
-        </blockquote>
+      
 
-        <div className="space-y-4">
-          {item.description && (
-            <div className="flex items-center gap-3 p-3 rounded-lg dark:bg-slate-800 border">
-              {item.avatarUrl && (
-                <Avatar>
-                  <AvatarImage src={item.avatarUrl} alt={item.nameUser} />
-                  <AvatarFallback>{item.nameUser?.charAt(0)}</AvatarFallback>
-                </Avatar>
-              )}
-              <div>
-                <h4 className="text-sm font-medium">{item.nameUser}</h4>
-                <p className="text-xs text-gray-500">
-                  Contributed on {dayjs(item.updated_at).format('MMM D, YYYY')}
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Explicacion: {item.referencia}</h3>
-            {!isContributing && !item.description && (
-              <Button onClick={handleContribute} variant="outline" className="flex items-center gap-2">
-                <Plus className="h-4 w-4" /> Contribute Explanation
-              </Button>
-            )}
+      <Card className="overflow-hidden mb-4 dark:bg-slate-900 ">
+        <CardHeader className="flex flex-row items-center gap-4">
+          <Avatar>
+            <AvatarImage src="/public/logo-idec.png" alt="Bible" />
+            <AvatarFallback>VD</AvatarFallback>
+          </Avatar>
+          <div>
+            <h2 className="text-lg font-semibold">IDEC Tiempos de gloria</h2>
+            <p className="text-sm text-gray-500">{dayjs(item.updated_at).format('MMM D, YYYY')}</p>
           </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <blockquote className="border-l-4 border-indigo-500 pl-4 italic">
+            <p className="mb-2 text-lg">{item.pasaje}</p>
+            <footer className="text-sm text-gray-600">{item.referencia}</footer>
+          </blockquote>
 
-          <ScrollArea className="max-h-[400px] overflow-auto">
-            {isContributing ? (
-              <div className="space-y-4">
-                <div className="bg-muted/50 rounded-lg p-3 mb-2 text-sm text-muted-foreground">
-                  <p className="font-medium mb-1">Formatting Guide:</p>
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>Use T: for Title</li>
-                    <li>Use S: for Subtitle</li>
-                    <li>Use P: for Paragraph</li>
-                  </ul>
+          <div className="space-y-4">
+            {item.description && (
+              <div className="flex items-center gap-3 p-3 rounded-lg dark:bg-slate-800 border">
+                {item.avatarUrl && (
+                  <Avatar>
+                    <AvatarImage src={item.avatarUrl} alt={item.nameUser} />
+                    <AvatarFallback>{item.nameUser?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                )}
+                <div>
+                  <h4 className="text-sm font-medium">{item.nameUser}</h4>
+                  <p className="text-xs text-gray-500">
+                    Contributed on {dayjs(item.updated_at).format('MMM D, YYYY')}
+                  </p>
                 </div>
-                <Textarea
-                  placeholder="
+              </div>
+            )}
+
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Explicacion: {item.referencia}</h3>
+              {!isContributing && !item.description && (
+                <Button onClick={handleContribute} variant="outline" className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" /> Contribute Explanation
+                </Button>
+              )}
+            </div>
+
+            <ScrollArea className="max-h-[400px] overflow-auto">
+              {isContributing ? (
+                <div className="space-y-4">
+                  <div className="bg-muted/50 rounded-lg p-3 mb-2 text-sm text-muted-foreground">
+                    <p className="font-medium mb-1">Formatting Guide:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Use T: for Title</li>
+                      <li>Use S: for Subtitle</li>
+                      <li>Use P: for Paragraph</li>
+                    </ul>
+                  </div>
+                  <Textarea
+                    placeholder="
                   Example:
                   T: Main Title
                   S: First Subtitle
                   P: Your paragraph text here..."
-                  className="min-h-[200px] font-mono"
-                  value={contributedText}
-                  onChange={(e) => setContributedText(e.target.value)}
-                />
-                <div className="flex justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setIsContributing(false);
-                      setContributedText('');
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={handleSubmitContribution}
-                    disabled={!contributedText.trim()}
-                  >
-                    Submit Explanation
-                  </Button>
-                </div>
-              </div>
-            ) : item.description ? (
-              <Collapsible open={isExplanationOpen} onOpenChange={setIsExplanationOpen}>
-                <div className="space-y-2">
-                  <div className={isExplanationOpen ? 'hidden' : 'line-clamp-3'}>
-                    {formatExplanation(item.description)}
-                  </div>
-                  <CollapsibleContent className="space-y-2">
-                    {formatExplanation(item.description)}
-                  </CollapsibleContent>
-                  <CollapsibleTrigger asChild>
+                    className="min-h-[200px] font-mono"
+                    value={contributedText}
+                    onChange={(e) => setContributedText(e.target.value)}
+                  />
+                  <div className="flex justify-end gap-2">
                     <Button
                       variant="outline"
-                      size="sm"
-                      className="flex items-center gap-2 text-indigo-600"
+                      onClick={() => {
+                        setIsContributing(false);
+                        setContributedText('');
+                      }}
                     >
-                      {isExplanationOpen ? (
-                        <>Show Less <ChevronUp className="h-4 w-4" /></>
-                      ) : (
-                        <>Read More <ChevronDown className="h-4 w-4" /></>
-                      )}
+                      Cancel
                     </Button>
-                  </CollapsibleTrigger>
+                    <Button
+                      onClick={handleSubmitContribution}
+                      disabled={!contributedText.trim()}
+                    >
+                      Submit Explanation
+                    </Button>
+                  </div>
                 </div>
-              </Collapsible>
-            ) : (
-              <p className="text-gray-500 italic">No explanation available yet. Be the first to contribute!</p>
-            )}
-          </ScrollArea>
-        </div>
-      </CardContent>
+              ) : item.description ? (
+                <Collapsible open={isExplanationOpen} onOpenChange={setIsExplanationOpen}>
+                  <div className="space-y-2">
+                    <div className={isExplanationOpen ? 'hidden' : 'line-clamp-3'}>
+                      {formatExplanation(item.description)}
+                    </div>
+                    <CollapsibleContent className="space-y-2">
+                      {formatExplanation(item.description)}
+                    </CollapsibleContent>
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2 text-indigo-600"
+                      >
+                        {isExplanationOpen ? (
+                          <>Show Less <ChevronUp className="h-4 w-4" /></>
+                        ) : (
+                          <>Read More <ChevronDown className="h-4 w-4" /></>
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
+                </Collapsible>
+              ) : (
+                <p className="text-gray-500 italic">No explanation available yet. Be the first to contribute!</p>
+              )}
+            </ScrollArea>
+          </div>
+        </CardContent>
 
-      <CardFooter className="flex justify-between ">
-        <Button variant="outline" size="sm" className="text-gray-600">
-          <Heart className="mr-2 h-4 w-4" /> Like
-        </Button>
-        <Button variant="outline" size="sm" className="text-gray-600">
-          <MessageCircle className="mr-2 h-4 w-4" /> Comment
-        </Button>
-        <Button variant="outline" size="sm" className="text-gray-600">
-          <Share2 className="mr-2 h-4 w-4" /> Share
-        </Button>
-      </CardFooter>
-    </Card>
+        <CardFooter className="flex justify-between ">
+          <Button variant="outline" size="sm" className="text-gray-600">
+            <Heart className="mr-2 h-4 w-4" /> Like
+          </Button>
+          <Button variant="outline" size="sm" className="text-gray-600">
+            <MessageCircle className="mr-2 h-4 w-4" /> Comment
+          </Button>
+          <Button variant="outline" size="sm" className="text-gray-600">
+            <Share2 className="mr-2 h-4 w-4" /> Share
+          </Button>
+        </CardFooter>
+      </Card>
+    </>
   );
 }
+
+export default BlogPage;

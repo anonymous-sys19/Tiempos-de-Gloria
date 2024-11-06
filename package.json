@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "concurrently \"nodemon src/api/server.js\" \"vite\"",
     "build": "tsc -b && vite build",
+    "start": "node dist/api/server.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -24,6 +25,7 @@
     "@radix-ui/react-toast": "^1.2.2",
     "@radix-ui/react-tooltip": "^1.1.3",
     "@supabase/supabase-js": "^2.45.6",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
