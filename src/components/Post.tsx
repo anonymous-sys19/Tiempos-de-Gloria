@@ -13,6 +13,7 @@ import { toast } from "@/hooks/use-toast"
 import { supabase } from '@/supabaseClient'
 import { useAuth } from '@/hooks/userAuth'
 import TextoConNegritaAutomatica from './NegritaComponents'
+<<<<<<< HEAD
 
 
 
@@ -20,6 +21,15 @@ interface Post {
     id: string
     name: string
     url: string
+=======
+import { Skeleton } from '@/components/ui/skeleton'
+
+interface Post {
+
+    id: string
+    name: string
+    url?: string
+>>>>>>> beta
     uid: string
     description: string
     createdAt: string
@@ -69,12 +79,20 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
     const [commentCount, setCommentCount] = useState(0)
     const [comments, setComments] = useState<Comment[]>([])
     const [newComment, setNewComment] = useState('')
+<<<<<<< HEAD
     const [loading, setLoading] = useState(false)
+=======
+    const [loading, setLoading] = useState(true)
+>>>>>>> beta
     const [likedComments, setLikedComments] = useState<Set<string>>(new Set())
     const commentsEndRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const checkUserLiked = async () => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> beta
             const { data, error } = await supabase
                 .from('likes')
                 .select('id')
@@ -88,6 +106,10 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
 
     useEffect(() => {
         const fetchCommentCount = async () => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> beta
             const { count, error } = await supabase
                 .from('comments')
                 .select('id', { count: 'exact' })
@@ -116,6 +138,10 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
     }, [comments])
 
     const fetchComments = async () => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> beta
         const { data, error } = await supabase
             .from('comments')
             .select('*')
@@ -128,6 +154,10 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
         }
 
         const { data: likedCommentsData, error: likesError } = await supabase
+<<<<<<< HEAD
+=======
+
+>>>>>>> beta
             .from('comments_liked')
             .select('comment_id')
             .eq('user_id', user?.id)
@@ -141,6 +171,10 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
 
         const commentsWithLikes = await Promise.all(
             (data as Comment[]).map(async (comment) => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> beta
                 const { data: likesData, error: likesError } = await supabase
                     .from('comments_liked')
                     .select('comment_id')
@@ -161,6 +195,10 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
             return
         }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> beta
         try {
             if (hasLiked) {
                 const { error } = await supabase
@@ -203,6 +241,10 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
     const handleLikeComment = async (commentId: string) => {
         const isLiked = likedComments.has(commentId)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> beta
         try {
             if (isLiked) {
                 const { error } = await supabase
@@ -250,7 +292,11 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
     const handleAddComment = async () => {
         if (!newComment.trim()) return
 
+<<<<<<< HEAD
         setLoading(true)
+=======
+
+>>>>>>> beta
         try {
             const { data, error } = await supabase
                 .from('comments')
@@ -293,6 +339,47 @@ export const Post = React.memo(({ post, onUserClick }: { post: Post; onUserClick
     const getInitials = (name: string): string => name.split(' ').map((word) => word[0]).join('').toUpperCase()
 
 
+<<<<<<< HEAD
+=======
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false)
+        }, 1000) // Simula una carga de 1 segundos
+
+        return () => clearTimeout(timer)
+    }, [])
+
+
+    if (loading) {
+        return (
+            <Card className="w-full max-w-2xl mx-auto mt-2">
+                <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+                    <div className="flex items-center space-x-4">
+                        <Skeleton className="h-12 w-12 rounded-full" />
+                        <div className="space-y-2">
+                            <Skeleton className="h-4 w-[200px]" />
+                            <Skeleton className="h-4 w-[100px]" />
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <Skeleton className="h-4 w-full mt-4" />
+                    <Skeleton className="h-4 w-full mt-2" />
+                    <Skeleton className="h-4 w-2/3 mt-2" />
+                    <Skeleton className="h-64 w-full mt-4" />
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                    <Skeleton className="h-10 w-[100px]" />
+                    <Skeleton className="h-10 w-[100px]" />
+                    <Skeleton className="h-10 w-[100px]" />
+                </CardFooter>
+            </Card>
+        )
+    }
+
+    if (!post) return null;
+
+>>>>>>> beta
     return (
         <>
 

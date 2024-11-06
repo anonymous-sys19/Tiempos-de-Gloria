@@ -48,6 +48,7 @@ const getInitials = (name: string): string => {
 }
 
 
+<<<<<<< HEAD
 const menuItems = [
   {
     name: 'Inicio',
@@ -104,6 +105,8 @@ const menuItems = [
     ],
   },
 ]
+=======
+>>>>>>> beta
 
 
 
@@ -115,9 +118,15 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navigate = useNavigate()
 
+<<<<<<< HEAD
   const handleNavigation = (e: { preventDefault: () => void }, path: string) => {
     e.preventDefault()  // Evita la recarga
     navigate(path)  // Navega a la ruta sin recargar
+=======
+  const handleNavigation = (e: { preventDefault: () => void }) => {
+    e.preventDefault()  // Evita la recarga
+    navigate("/historia")  // Navega a la ruta sin recargar
+>>>>>>> beta
 
   }
 

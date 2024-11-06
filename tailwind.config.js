@@ -12,6 +12,10 @@ export default {
 		  md: 'calc(var(--radius) - 2px)',
 		  sm: 'calc(var(--radius) - 4px)',
 		  '10/5': '10px 0 5px 0', // estilo de border-radius personalizado
+<<<<<<< HEAD
+=======
+		  'img-person': '37px 109px 84px 87px',
+>>>>>>> beta
 		},
 		colors: {
 		  background: 'hsl(var(--background))',
@@ -56,6 +60,10 @@ export default {
 		  },
 		  // Color personalizado agregado aquí
 		  'white-opacity': '#ffffff0f',
+<<<<<<< HEAD
+=======
+		  
+>>>>>>> beta
 		},
 	  },
 	},
