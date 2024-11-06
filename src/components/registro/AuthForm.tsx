@@ -62,7 +62,7 @@ const AuthForm: React.FC = () => {
       <div className="lg:flex-1 bg-blue-600 flex flex-col items-center justify-center p-8">
         <div className="max-w-md text-center lg:text-left">
           <img
-            src="/public/logo-idec.png"
+            src="public/logo-idec.png"
             alt="Logo"
             className=" mx-auto lg:mx-0 mb-8 w-48 h-48 object-scale-down rounded-img-person"
           />
