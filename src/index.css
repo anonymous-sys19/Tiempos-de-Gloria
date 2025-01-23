@@ -167,3 +167,6 @@ button:focus-visible {
   white-space: nowrap; /* Previene que el texto se divida en varias líneas */
   text-overflow: ellipsis; /* Agrega "..." al final si el texto es demasiado largo */
 }
+
+
+

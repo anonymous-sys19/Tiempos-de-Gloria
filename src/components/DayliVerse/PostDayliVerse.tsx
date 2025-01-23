@@ -77,7 +77,7 @@ const BlogPage: React.FC = () => {
         try {
           // Check if the verse already exists
           const { data: existingData, error: existingError } = await supabase
-          .from('idectableimages')
+          .from('posts_biblia')
           .select('id, pasaje, referencia')
           .eq('pasaje', verse)
           .eq('referencia', reference);
@@ -93,7 +93,7 @@ const BlogPage: React.FC = () => {
               const removeIds = remove.map(item => item.id);
               
               const { error: deleteError } = await supabase
-              .from('idectableimages')
+              .from('posts_biblia')
               .delete()
               .in('id', removeIds);
               
@@ -105,7 +105,7 @@ const BlogPage: React.FC = () => {
           } else {
             // Verse doesn't exist, insert it
             const { data, error } = await supabase
-            .from('idectableimages')
+            .from('posts_biblia')
             .insert({
               pasaje: verse,
               referencia: reference,
@@ -139,7 +139,7 @@ const BlogPage: React.FC = () => {
       console.log('Intentando obtener datos de Supabase...');
 
       const { data, error } = await supabase
-      .from('idectableimages')
+      .from('posts_biblia')
       .select('*', { count: 'exact' }) // Usar 'exact' para obtener el número de filas
       .not('pasaje', 'is', null)  // Verifica que reference no sea nulo
       .not('referencia', 'is', null)  // Verifica que reference no sea nulo
