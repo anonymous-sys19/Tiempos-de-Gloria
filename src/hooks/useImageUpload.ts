@@ -153,14 +153,14 @@ const UseMediaUpload = (userId: string | undefined) => {
     if (!e.target.files) return;
 
     const newFiles = Array.from(e.target.files).map(file => {
-      const fileType = file.type.startsWith('video') ? 'video' : 'image';
+      const fileType: 'image' | 'video' = file.type.startsWith('video') ? 'video' : 'image';
       return Object.assign(file, {
         preview: URL.createObjectURL(file),
         type: fileType
       });
     });
 
-    setMediaFiles(prevFiles => [...prevFiles, ...newFiles]);
+    setMediaFiles(prevFiles => [...prevFiles, ...newFiles as MediaFile[]]);
   };
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

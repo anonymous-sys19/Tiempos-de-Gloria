@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-
   Search,
   Home,
   Users,
@@ -33,13 +32,11 @@ import {
   BookPlusIcon,
   Star
 } from 'lucide-react'
-import { useAuth } from "@/hooks/userAuth"
+import { useAuth, UserData } from "@/hooks/userAuth"
 import { useState, useEffect } from 'react'
-// import Historia from './Rutas/QuienesSomos/Historia'
 import { useNavigate } from 'react-router-dom'
 import { ChatBubbleIcon, StarFilledIcon } from '@radix-ui/react-icons'
 import { SearchInput } from './Search'
-
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -47,9 +44,9 @@ interface LayoutProps {
 
 const getInitials = (name: string): string => {
   return name
-    .split(' ')
-    .map((word: string) => word[0])
-    .join('')
+  .split(' ')
+  .map((word: string) => word[0])
+  .join('')
     .toUpperCase()
 }
 
@@ -57,12 +54,26 @@ const getInitials = (name: string): string => {
 
 
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { user, session, signOut } = useAuth()
+export const  Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isScrolled, setScrolled] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const { user,  session, signOut, getUser } = useAuth()
+  
+    const [userData, setUserData] = useState<UserData | null>(null)
+  
+    useEffect(() => {
+      if (session?.user.id) {
+        const fetchUserData = async () => {
+          const data = await getUser()  // Llamamos a la función para obtener los datos del perfil
+          setUserData(data)  // Guardamos los datos del usuario en el estado
+        }
+  
+        fetchUserData()
+      }
+    }, [session?.user?.id])
 
 
+ 
   const navigate = useNavigate()
 
   const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -117,14 +128,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/*  */}
             <div className="flex items-center justify-end md:flex-1 lg:w-0">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={user?.user_metadata.avatar_url} alt={user?.user_metadata.name} />
-                <AvatarFallback>{user?.user_metadata.name ? getInitials(user.user_metadata.name) : 'U'}</AvatarFallback>
+                <AvatarImage src={userData?.avatar_url|| undefined} alt={userData?.display_name} className='object-cover'/>
+                <AvatarFallback>{userData?.display_name? getInitials(userData.display_name) : 'U'}</AvatarFallback>
               </Avatar>
 
               {/* El nombre solo será visible en pantallas grandes */}
               <span className="ml-3 text-gray-700 dark:text-gray-300 text-sm font-medium hidden lg:block">
                 <span className="sr-only">Abrir menú de usuario para </span>
-                {session ? user?.user_metadata.name : ""}
+                {session ? userData?.display_name : "Loading...Usuario"}
               </span>
 
 
@@ -311,16 +322,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   className="w-full justify-start dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
                   <Avatar className="h-8 w-8 mr-2">
-                    <AvatarImage src={user?.user_metadata.avatar_url} alt={user?.user_metadata.name} />
+                    <AvatarImage src={userData?.avatar_url ?? undefined} alt={userData?.display_name} className='object-cover' />
                     <AvatarFallback>
-                      {user?.user_metadata.name ? getInitials(user.user_metadata.name) : 'U'}
+                      {user && userData?.display_name ? getInitials(userData.display_name) : 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <span
                     className="truncate max-w-[100px] overflow-hidden whitespace-nowrap"
-                    title={user?.user_metadata.name}
+                    title={userData?.display_name}
                   >
-                    {session ? user?.user_metadata.name : ""}
+                    
+                    {user ?  userData?.display_name : "Usuario"}
                   </span>
                   <ChevronDown className="ml-auto h-4 w-4" />
                 </Button>
@@ -383,3 +395,4 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   )
 }
+

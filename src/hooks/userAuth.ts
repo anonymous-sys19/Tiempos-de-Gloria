@@ -2,18 +2,21 @@ import { useState, useEffect } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '../supabaseClient'
 
-interface UserData {
+export interface UserData {
   id: string
-  username: string
-  email: string
+  display_name: string
+  avatar_url: string | null
+  portada_url: string | null
   // Agrega aquí cualquier otro campo que necesites de tus usuarios
 }
+
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
 
   const [loading, setLoading] = useState(true)
+
 
   useEffect(() => {
     // Obtener la sesión actual y suscribirse a los cambios
@@ -38,79 +41,117 @@ export function useAuth() {
     return data
   }
 
+  // const signInWithGoogle = async () => {
+  //   const { data, error } = await supabase.auth.signInWithOAuth({
+  //     provider: 'google',
+  //   })
+  //   if (error) throw error
+  //   return data
+  // }
+
   const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
     })
     if (error) throw error
-    return data
-  }
 
-  const signUp = async (email: string, password: string, username: string) => {
-    const { data: authData, error: authError } = await supabase.auth.signUp({ 
-      email, 
-      password 
-    })
-    if (authError) throw authError
+    // Esperar a que termine la autenticación y obtener el usuario
+    const { data: { session } } = await supabase.auth.getSession()
+    const user = session?.user
 
-    if (authData.user) {
-      const { error: profileError } = await supabase
-        .from('users')
-        .insert({ id: authData.user.id, email, username })
-      
-      if (profileError) throw profileError
+    if (user) {
+      // Revisar si el usuario ya existe en la tabla profiles
+      const { data: existingProfile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single()
+
+      if (!existingProfile && !profileError) {
+        // Insertar el perfil si no existe
+        const { user_metadata } = user
+        const { full_name, avatar_url } = user_metadata || {}
+
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            display_name: full_name || 'Usuario de Google', // Valor predeterminado si no se obtiene el nombre
+            avatar_url: avatar_url || null, // Guardar el avatar si está disponible
+          })
+
+        if (insertError) throw insertError
+      }
     }
 
-    return authData
+    return data
   }
-
+  const signUp = async (email: string, password: string, fullname: string) => {
+    try {
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (authError) throw authError;
+  
+      if (authData.user) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: authData.user.id,
+            display_name: fullname,
+            avatar_url: null,
+            portada_url: null,
+          });
+  
+        if (profileError) throw profileError;
+      }
+  
+      return authData;
+    } catch (error) {
+      console.error("Error al registrar al usuario:", error);
+      throw error;
+    }
+  };
+  
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
   }
 
-  const getCurrentUser = async (): Promise<UserData | null> => {
-    if (!user) return null
+  const getUser = async (): Promise<UserData | null> => {
     const { data, error } = await supabase
-      .from('users')
-      .select('id, username, email')
-      .eq('id', user.id)
-      .single()
-    
-    if (error) throw error
+      .from('profiles')
+      .select('*')
+      .eq('id', user?.id)
+      .single()  // Queremos solo un registro, ya que el ID es único
+  
+    if (error) {
+      console.error(error)
+      return null
+    }
     return data
   }
-
-  const getUser = async (userId: string): Promise<UserData | null> => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('id, username, email')
-      .eq('id', userId)
-      .single()
-    
-    if (error) throw error
-    return data
-  }
-
   const getAllUsers = async (): Promise<UserData[]> => {
     const { data, error } = await supabase
-      .from('users')
-      .select('id, username, email')
-    
-    
+      .from('profiles')
+      .select('*')
+      
+
     if (error) throw error
     return data
   }
 
   return {
     user,
+    setUser,
     session,
     loading,
     signIn,
     signInWithGoogle, // Nuevo método para Google
     signUp,
     signOut,
-    getCurrentUser,
     getUser,
     getAllUsers,
   }

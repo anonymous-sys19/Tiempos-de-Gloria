@@ -127,8 +127,6 @@ const UseUploading = () => {
                         hashtags: hashtags.join(','),
                         user_id: user?.id,
                         email: user?.email,
-                        nameUser: user?.user_metadata?.name,
-                        avatarUrl: user?.user_metadata?.avatar_url,
                         slug,
                     });
 

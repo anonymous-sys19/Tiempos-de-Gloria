@@ -1,4 +1,4 @@
-import { ChurchNode } from '@/types/ChurchData';
+import { ChurchNode } from '../types/ChurchData';
 
 export const churchData: ChurchNode = {
   name: "Zona Colorado",

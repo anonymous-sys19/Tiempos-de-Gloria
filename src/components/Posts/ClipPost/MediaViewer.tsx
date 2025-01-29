@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import  { useState, useRef, useEffect } from 'react';
 // import { MediaModal } from './MediaModal';
 import { VolumeControl } from './VolumeControl';
 // import SharedPost from '../ShareComponents/SharedPost';

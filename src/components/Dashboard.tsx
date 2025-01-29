@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import React, {  useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Newspaper, ChevronRight } from 'lucide-react';
@@ -15,7 +15,6 @@ export default function Dashboard() {
   const {posts} = useFetchPosts();
   const [activeMenu, setActiveMenu] = useState<'publicaciones' | 'dayliverse'>('publicaciones');
   const navigate = useNavigate();
-
 
   const handleUserClick = (userId: string) => {
     navigate(`/profile/${userId}`);

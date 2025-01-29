@@ -12,7 +12,7 @@ const AuthForm: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
+  const [fullname, setFullname] = useState('')
   const { signIn, signUp, signInWithGoogle } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,7 +25,7 @@ const AuthForm: React.FC = () => {
           description: "Bienvenido de vuelta!",
         })
       } else {
-        await signUp(email, password, username)
+        await signUp(email, password, fullname)
         toast({
           title: "Registro exitoso",
           description: "Por favor, verifica tu email para completar el registro.",
@@ -120,12 +120,12 @@ const AuthForm: React.FC = () => {
                 <form onSubmit={handleSubmit}>
                   <div className="grid w-full items-center gap-4">
                     <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="username">Nombre de usuario</Label>
+                      <Label htmlFor="fullname">Nombre Completo</Label>
                       <Input
-                        id="username"
-                        placeholder="usuario123"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        id="fullname"
+                        placeholder="nombre apellido"
+                        value={fullname}
+                        onChange={(e) => setFullname(e.target.value)}
                         required
                       />
                     </div>

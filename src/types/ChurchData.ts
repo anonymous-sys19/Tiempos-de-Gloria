@@ -5,10 +5,9 @@ export interface ChurchNode {
   children?: ChurchNode[];
 }
 
-export interface D3Node extends d3.HierarchyNode<ChurchNode> {
+export interface D3Node extends d3.HierarchyPointNode<ChurchNode> {
   x0?: number;
   y0?: number;
-  x?: number;
-  y?: number;
   _children?: D3Node[];
+  nodeId?: string;
 }

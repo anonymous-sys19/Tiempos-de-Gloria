@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import Draggable from 'react-draggable';
 import { X, Minus, Radio } from 'lucide-react';
-import { useFloatingBubble } from '@/hooks/FloatingBubbleContext';
+import { useFloatingBubble } from '../hooks/FloatingBubbleContext';
 
 type FloatingBubbleProps = {
     component: React.ReactNode; // Componente a cargar en la ventana emergente

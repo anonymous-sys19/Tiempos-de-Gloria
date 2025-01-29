@@ -4,7 +4,7 @@ export interface MediaPost {
     description: string;
     user_id: string;
     email: string;
-    nameUser: string;
+    display_name: string;
     avatarUrl: string | null;
     hashtags: string;
     slug: string;

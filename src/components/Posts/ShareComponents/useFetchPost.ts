@@ -202,9 +202,9 @@ export const useFetchPost = (slug?: string) => {
 
                 break;
             case "whatsapp":
-                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareUrl)}`;
+                { const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareUrl)}`;
                 window.open(whatsappUrl, "_blank");
-                break;
+                break; }
             default:
                 break;
         }

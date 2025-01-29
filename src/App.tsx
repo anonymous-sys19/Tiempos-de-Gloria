@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 import './App.css'
@@ -16,7 +15,6 @@ import BibliaDigitalComplet from './components/Rutas/BibliaApi/BibliaCompleta/Bi
 import PortalBiblico from './components/Rutas/BibliaApi/Portal-biblico/PortalBiblico'
 import SermonesBiblicos from './components/Rutas/BibliaApi/Sermones/SermonesBiblicos'
 import MessengerChat from './components/chat/page'
-import { GEmergente } from './components/Rutas/Ministerios/Gemergente/GJunior/page'
 import { FaithDeclaration } from './components/Rutas/QuienesSomos/DeclaracionDeFe/DeclaracionDefe'
 import { PrincipiosPracticos } from './components/Rutas/QuienesSomos/principios-practicos/PrincipiosPracticos'
 
@@ -101,11 +99,7 @@ const App: React.FC = () => {
               </ProtectedRoute>
             } />
             {/* Ministerios */}
-            <Route path="/ministerio-emergente" element={
-              <ProtectedRoute>
-                <GEmergente />
-              </ProtectedRoute>
-            } />
+            
             {/* Quienes somos */}
             <Route path="/declaracion-de-fe" element={
               <ProtectedRoute>

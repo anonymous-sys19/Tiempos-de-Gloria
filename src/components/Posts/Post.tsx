@@ -22,6 +22,7 @@ import { MediaViewer } from './ClipPost/MediaViewer'
 
 export const Post = React.memo(({ post, onUserClick }: { post: PostTypes; onUserClick: (userId: string) => void }) => {
     const { user } = useAuth()
+    // const [userData, setUserData] = useState<UserData | null>(null)
     const shareUrl = `${window.location.origin}/post/${post?.slug}`
     const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
     const [likesCount, setLikesCount] = useState(post.likes || 0)
@@ -34,6 +35,9 @@ export const Post = React.memo(({ post, onUserClick }: { post: PostTypes; onUser
     const [likedComments, setLikedComments] = useState<Set<string>>(new Set())
     const commentsEndRef = useRef<HTMLDivElement>(null)
 
+
+
+
     const renderMedia = () => {
         if (!post.url) {
             console.warn('No hay URL para el post.');
@@ -43,9 +47,9 @@ export const Post = React.memo(({ post, onUserClick }: { post: PostTypes; onUser
         // Validamos explícitamente si el tipo de archivo es válido
         if (post.fileType === 'video') {
             return (
-                
-                    <MediaViewer post={post} />
-               
+
+                <MediaViewer post={post} />
+
 
             );
         } else if (post.fileType === 'image') {
@@ -65,8 +69,6 @@ export const Post = React.memo(({ post, onUserClick }: { post: PostTypes; onUser
             return null; // Opcional: mostrar un mensaje de error o un marcador de posición.
         }
     };
-
-
 
 
     useEffect(() => {
@@ -331,16 +333,16 @@ export const Post = React.memo(({ post, onUserClick }: { post: PostTypes; onUser
                     {/* Header del Post */}
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                            <Avatar className="h-10 w-10 cursor-pointer" onClick={() => onUserClick(post.uid)}>
-                                <AvatarImage src={post.avatar_url || ''} alt={post.name_Username} />
-                                <AvatarFallback>{getInitials(post.name_Username)}</AvatarFallback>
+                            <Avatar className="h-10 w-10 cursor-pointer" onClick={() => onUserClick(post.profile.id)}>
+                                <AvatarImage src={post.profile.avatar_url || ''} alt={post.profile.display_name} />
+                                <AvatarFallback>{getInitials(post.profile.display_name)}</AvatarFallback>
                             </Avatar>
                             <div>
                                 <h2
                                     className="text-lg font-semibold cursor-pointer hover:underline"
-                                    onClick={() => onUserClick(post.uid)}
+                                    onClick={() => onUserClick(post.profile.id)}
                                 >
-                                    {post.name_Username}
+                                    {post.profile.display_name}
                                 </h2>
                                 <div className="flex items-center text-sm text-gray-500 space-x-1">
                                     <span>{formatDate(post.createdAt)}</span>
