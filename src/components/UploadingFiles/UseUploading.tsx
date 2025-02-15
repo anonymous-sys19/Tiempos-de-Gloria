@@ -8,12 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Image as ImageIcon, Music, Send, Video } from 'lucide-react';
+import { Image as ImageIcon, Send, Video } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { nanoid } from 'nanoid';
 import { SUPABASE_URL, STORAGE_BUCKET, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/lib/constants';
 import { MediaFile } from '@/types/postTypes/media';
 import { validateFile, getInitials } from '@/utils/file-helpers';
+import UploadForm from './UploadMusic';
 
 const UseUploading = () => {
     const { user } = useAuth();
@@ -247,10 +248,7 @@ const UseUploading = () => {
                                 <Video className="mr-2 h-4 w-4" />
                                 Videos
                             </Button>
-                            <Button className="mt-2 sm:mt-0">
-                                <Music className='mr-2 h-4 w-4' />
-                                Musica
-                            </Button>
+                            <UploadForm/>
                         </div>
                         <Button 
                             type="submit" 

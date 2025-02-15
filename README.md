@@ -1,34 +1,59 @@
-> [!NOTE]
-> Proyecto Tiempos de Gloria
+# 🌌 Red Social Cristiana Futurista
 
-Aplicación desarrollada en **React + TypeScript** con integración de **Supabase** como backend para manejo de autenticación y base de datos. Este proyecto incluye un frontend moderno y eficiente diseñado para brindar una experiencia fluida y robusta, manteniendo buenas prácticas y escalabilidad en mente.
+<div align="center">
+  <img src="./public/logo-idec.png" alt="Vista previa del proyecto" width="80%" />
+</div>
 
-## Funcionalidades
-- **Autenticación segura**: Login y registro de usuarios mediante Supabase.
-- **Integración de base de datos**: Gestión eficiente de datos con la API de Supabase.
-- **Componentes reutilizables**: Código modular y reutilizable en React y TypeScript.
-- **Rutas dinámicas**: Navegación fluida sin recargas de página.
+Bienvenido/a a **[IDEC Tiempos de gloria]**, una red social cristiana con una estética futurista, desarrollada con tecnologías modernas para una experiencia única e innovadora.
 
-## Requisitos
-- Node.js
-- React 18+
-- TypeScript
-- Supabase
+## 🚀 Tecnologías Usadas
 
->[!TIP]
->Cómo empezar
+| Tecnología | Descripción |
+|-----------|------------|
+| ![React](https://skillicons.dev/icons?i=react) | Framework de UI para la creación de interfaces interactivas. |
+| ![TypeScript](https://skillicons.dev/icons?i=ts) | Lenguaje de programación tipado para mayor seguridad y escalabilidad. |
+| ![Vite](https://skillicons.dev/icons?i=vite) | Entorno de desarrollo rápido y optimizado. |
+| ![Supabase](https://skillicons.dev/icons?i=supabase) | Base de datos y autenticación en tiempo real. |
 
-1. Clonar el repositorio: `git clone https://github.com/anonymous-sys19/Tiempos-de-Gloria.git`
-2. Instalar dependencias: `npm install`
-3. Configurar variables de entorno en `.env`
-4. Iniciar el proyecto: `npm start`
 
-Este repositorio cuenta con dos ramas principales:
-- **beta**: Rama de desarrollo
-- **main**: Rama de producción, para lanzamientos estables.
+## 🎯 Funcionalidades Principales
 
-Mantente atento a los cambios y revisa el README para futuras actualizaciones. ¡Contribuciones y retroalimentación son bienvenidas!
+✅ Creación y personalización de perfiles.  
+✅ Publicaciones con imágenes, videos y textos inspiradores.  
+✅ Sistema de comentarios y reacciones.  
+✅ Chats en tiempo real con Supabase y WebSockets.  
+✅ Modo claro y oscuro con una interfaz moderna.  
 
->[!WARNING]
->Recursos
-1. https://github.com/atticus64/bibleapi   @anonymous-sys19 #github
+## 📸 Capturas de Pantalla
+
+_Agrega aquí capturas de pantalla de la aplicación para mostrar su diseño futurista._
+
+## 🛠 Instalación y Configuración
+
+1. Clona el repositorio:  
+   ```bash
+   git clone https://github.com/tuusuario/tu-repo.git
+   ```
+2. Entra en la carpeta del proyecto:  
+   ```bash
+   cd tu-repo
+   ```
+3. Instala las dependencias:  
+   ```bash
+   npm install
+   ```
+4. Ejecuta el servidor en modo desarrollo:  
+   ```bash
+   npm run dev
+   ```
+
+## 👤 Desarrollador
+
+| ![GreyDev](https://skillicons.dev/icons?i=github) |
+|--------------------------------|
+**[GreyDev]**  |
+[GitHub](https://github.com/anonymous-sys19) |
+
+---
+
+Disfruta de esta red social y únete a nuestra comunidad cristiana con visión futurista. 🙏✨

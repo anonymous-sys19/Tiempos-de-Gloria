@@ -11,7 +11,7 @@ import { useAuth } from './hooks/userAuth'
 import { ThemeProvider } from './components/ThemeComponents/theme-provider'
 import FacebookStyleMusicPlayer from './components/Music/PlayerMusic'
 import Historia from './components/Rutas/QuienesSomos/Historia'
-import BibliaDigitalComplet from './components/Rutas/BibliaApi/BibliaCompleta/BibliaDigital'
+import Biblia from './components/Rutas/BibliaApi/Biblia/page'
 import PortalBiblico from './components/Rutas/BibliaApi/Portal-biblico/PortalBiblico'
 import SermonesBiblicos from './components/Rutas/BibliaApi/Sermones/SermonesBiblicos'
 import MessengerChat from './components/chat/page'
@@ -20,6 +20,7 @@ import { PrincipiosPracticos } from './components/Rutas/QuienesSomos/principios-
 
 import { TreeChart } from './components/Rutas/QuienesSomos/Estructura'
 import { churchData } from './data/churchData';
+
 // Componente para rutas protegidas
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth()
@@ -47,7 +48,7 @@ const App: React.FC = () => {
       {/* <FloatingBubble component={<FacebookStyleMusicPlayer />} /> */}
 
       <FloatingBubbleProvider>
-        <FloatingBubble component={<FacebookStyleMusicPlayer/>} />
+        <FloatingBubble component={<FacebookStyleMusicPlayer />} />
 
         <Router>
           <Routes>
@@ -80,7 +81,7 @@ const App: React.FC = () => {
             } />
             <Route path="/biblia" element={
               <ProtectedRoute>
-                <BibliaDigitalComplet />
+                <Biblia />
               </ProtectedRoute>
             } />
             <Route path="/portal-biblico" element={
@@ -99,7 +100,7 @@ const App: React.FC = () => {
               </ProtectedRoute>
             } />
             {/* Ministerios */}
-            
+
             {/* Quienes somos */}
             <Route path="/declaracion-de-fe" element={
               <ProtectedRoute>
@@ -116,6 +117,7 @@ const App: React.FC = () => {
                 <TreeChart data={churchData} />
               </ProtectedRoute>
             } />
+         
 
           </Routes>
 
