@@ -16,4 +16,3 @@ export const formatDate = (dateString: string) => {
     if (minutes > 0) return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`
     return 'hace unos segundos'
 }
-

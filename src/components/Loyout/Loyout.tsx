@@ -30,7 +30,8 @@ import {
   Book,
   BookA,
   BookPlusIcon,
-  Star
+  Star,
+  BookOpenText
 } from 'lucide-react'
 import { useAuth, UserData } from "@/hooks/userAuth"
 import { useState, useEffect } from 'react'
@@ -111,7 +112,7 @@ export const  Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-3 md:justify-start md:space-x-10">
             <div className="flex justify-start lg:w-0 lg:flex-1">
-              <img src='/IDEC.gif' className="h-auto w-32" />
+              <img src='/Zona.gif' className="h-auto w-32" />
               {/* <video controls src='/public/1107.mp4' /> */}
             </div>
             <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
@@ -273,10 +274,57 @@ export const  Layout: React.FC<LayoutProps> = ({ children }) => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button variant="outline" className="w-full justify-start dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+            {/* Final de Quienes somos 
+             */}
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full justify-start dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+                  <BookOpenText className="mr-4 h-6 w-6" />
+                   Estudios Biblicos 
+                  <ChevronDown className="ml-auto h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuItem>
+                  <Users className="mr-2 h-4 w-4" />
+                  <span className="dropdown-item-text" >
+                    <a href="/resumen-biblico" className="dropdown-item-text" onClick={handleNavigation}>
+                      Resumen biblico
+                    </a>
+                  </span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Users className="mr-2 h-4 w-4" />
+                  <a href='/un-buen-liderazgo' className="dropdown-item-text">Se un lider</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Users className="mr-2 h-4 w-4" />
+                  <a href='' className="dropdown-item-text">mas...</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Users className="mr-2 h-4 w-4" />
+                  <a href='/#' className="dropdown-item-text">mas...</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Users className="mr-2 h-4 w-4" />
+                  <a href='' className="dropdown-item-text">mas...</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Users className="mr-2 h-4 w-4" />
+                  <a href='/#' className="dropdown-item-text">mas...</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Users className="mr-2 h-4 w-4" />
+                  <a href='/estructura' className="dropdown-item-text">mas...</a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* <Button variant="outline" className="w-full justify-start dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
               <ShoppingBag className="mr-4 h-6 w-6" />
               Marketplace
-            </Button>
+            </Button> */}
             <Button variant="outline" className="w-full justify-start dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
               <PlayCircle className="mr-4 h-6 w-6" />
               <a href="/playlist-music" onClick={handleNavigation}>

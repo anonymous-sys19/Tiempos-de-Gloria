@@ -14,7 +14,7 @@ import { nanoid } from 'nanoid';
 import { SUPABASE_URL, STORAGE_BUCKET, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/lib/constants';
 import { MediaFile } from '@/types/postTypes/media';
 import { validateFile, getInitials } from '@/utils/file-helpers';
-import UploadForm from './UploadMusic';
+// import UploadForm from './UploadMusic';
 
 const UseUploading = () => {
     const { user } = useAuth();
@@ -248,7 +248,7 @@ const UseUploading = () => {
                                 <Video className="mr-2 h-4 w-4" />
                                 Videos
                             </Button>
-                            <UploadForm/>
+                            {/* <UploadForm/> */}
                         </div>
                         <Button 
                             type="submit" 
