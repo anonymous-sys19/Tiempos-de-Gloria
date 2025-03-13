@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from "react"
+import { useState, useEffect, type ChangeEvent, type FormEvent } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { supabase } from '@/supabaseClient';
+// Asegúrate de tener configurado el cliente de Supabase
 
 export function EditProfileDialog() {
   const [displayName, setDisplayName] = useState("")
@@ -19,6 +21,31 @@ export function EditProfileDialog() {
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
+
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      if (!userId) return;
+  
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("display_name, avatar_url, portada_url")
+        .eq("id", userId)
+        .single();
+  
+      if (error) {
+        console.error("Error fetching profile:", error);
+      } else {
+        setDisplayName(data.display_name);
+        setAvatarPreview(data.avatar_url || "https://via.placeholder.com/150");
+        setCoverPreview(data.portada_url || "https://via.placeholder.com/150");
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+  
 
   const handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -37,27 +64,79 @@ export function EditProfileDialog() {
   }
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    // Here you would add the logic to upload images to Supabase Storage
-    // and update the profile in the 'profiles' table
-    console.log("Updating profile:", { displayName, avatarFile, coverFile })
-    setOpen(false)
-  }
+    e.preventDefault();
+  
+    let avatar_url = avatarPreview;
+    let portada_url = coverPreview;
+  
+    // Obtener ID del usuario
+    const userId = (await supabase.auth.getUser()).data.user?.id;
+    if (!userId) {
+      console.error("User not authenticated");
+      return;
+    }
+  
+    // Subir avatar si hay un nuevo archivo
+    if (avatarFile) {
+      const filePath = `profiles/${userId}.png`; // Cambia el formato si es necesario
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, avatarFile, { upsert: true });
+  
+      if (error) {
+        console.error("Error uploading avatar:", error);
+      } else {
+        avatar_url = supabase.storage.from("avatars").getPublicUrl(filePath).data.publicUrl;
+      }
+    }
+  
+    // Subir portada si hay un nuevo archivo
+    if (coverFile) {
+      const filePath = `portada/${userId}.png`;
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, coverFile, { upsert: true });
+  
+      if (error) {
+        console.error("Error uploading cover:", error);
+      } else {
+        portada_url = supabase.storage.from("avatars").getPublicUrl(filePath).data.publicUrl;
+      }
+    }
+  
+    // Actualizar perfil en la base de datos con la URL pública
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        display_name: displayName,
+        avatar_url,
+        portada_url,
+      })
+      .eq("id", userId);
+  
+    if (error) {
+      console.error("Error updating profile:", error);
+    } else {
+      console.log("Profile updated successfully");
+      setOpen(false);
+    }
+  };
+  
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="default">Edit Profile</Button>
+        <Button variant="default">Editar Perfil</Button>
       </SheetTrigger>
       <SheetContent side="bottom" className="h-[85vh] overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>Make changes to your profile here. Click save when you're done.</SheetDescription>
+          <SheetTitle>Editar perfil</SheetTitle>
+          <SheetDescription>Haz cambios en tu perfil aquí. Haz clic en Guardar cuando termines.</SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="space-y-8 py-6">
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="displayName">Display Name</Label>
+              <Label htmlFor="displayName">Nombre completo</Label>
               <Input
                 id="displayName"
                 value={displayName}
@@ -67,7 +146,7 @@ export function EditProfileDialog() {
             </div>
 
             <div className="space-y-2">
-              <Label>Profile Picture</Label>
+              <Label>Imagen de perfil</Label>
               <div className="flex items-center space-x-4">
                 <div className="relative w-24 h-24 overflow-hidden rounded-full bg-gray-100">
                   {avatarPreview ? (
@@ -107,14 +186,14 @@ export function EditProfileDialog() {
                     htmlFor="avatar"
                     className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 py-2 px-4"
                   >
-                    Change photo
+                    Cargar perfil
                   </Label>
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Cover Image</Label>
+              <Label>Imagen de portada</Label>
               <div className="space-y-2">
                 <div className="relative w-full h-40 overflow-hidden rounded-lg bg-gray-100">
                   {coverPreview ? (
@@ -154,7 +233,7 @@ export function EditProfileDialog() {
                     htmlFor="cover"
                     className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 py-2 px-4"
                   >
-                    Change cover
+                    Cargar portada
                   </Label>
                 </div>
               </div>
@@ -162,7 +241,7 @@ export function EditProfileDialog() {
           </div>
 
           <SheetFooter>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">Guardar informacion</Button>
           </SheetFooter>
         </form>
       </SheetContent>

@@ -29,10 +29,10 @@ export interface Comment {
 }
 
 export interface UserType {
-    user_id: string
-    avatarUrl: string
-    email: string
-    nameUser: string
+  id: string; 
+  avatar_url: string | null; 
+  display_name: string; 
+  portada_url: string | null; 
 }
 
 export interface SharedPost {

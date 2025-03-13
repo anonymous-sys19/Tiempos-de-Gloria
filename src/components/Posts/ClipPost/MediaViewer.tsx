@@ -1,17 +1,18 @@
-import  { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 // import { MediaModal } from './MediaModal';
-import { VolumeControl } from './VolumeControl';
+import { VolumeControl } from "./VolumeControl";
 // import SharedPost from '../ShareComponents/SharedPost';
-import { PostTypes } from '@/types/postTypes/posts'
+import { PostTypes } from "@/types/postTypes/posts";
+import { LazyImage } from "@/components/Personalizados/ImagePost";
+import { LazyVideo } from "@/components/Personalizados/LazyVideo";
 
-
-export function MediaViewer({  post  }: {post: PostTypes}) {
-//   const [showModal, setShowModal] = useState(false);
+export function MediaViewer({ post }: { post: PostTypes }) {
+  //   const [showModal, setShowModal] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const mediaRef = useRef<HTMLVideoElement | null>(null);
-  const shareUrl = `${window.location.origin}/post/${post?.slug}`
-  
+  const shareUrl = `${window.location.origin}/post/${post?.slug}`;
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -46,7 +47,7 @@ export function MediaViewer({  post  }: {post: PostTypes}) {
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         if (isInView && mediaRef.current) {
           event.preventDefault();
           setIsMuted(!isMuted);
@@ -55,8 +56,8 @@ export function MediaViewer({  post  }: {post: PostTypes}) {
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
   }, [isInView, isMuted]);
 
   const handleToggleMute = () => {
@@ -68,13 +69,10 @@ export function MediaViewer({  post  }: {post: PostTypes}) {
 
   return (
     <>
-      <div 
-        className="relative w-full aspect-[4/3] bg-black cursor-pointer overflow-hidden"
-        
-      >
-        {post.fileType === 'video' ? (
+      <div className="relative w-full aspect-[4/3] bg-black cursor-pointer overflow-hidden">
+        {post.fileType === "video" ? (
           <>
-            <video
+            {/* <video
               ref={mediaRef}
               src={post.url}
               className="absolute inset-0 w-full h-full object-contain"
@@ -82,22 +80,26 @@ export function MediaViewer({  post  }: {post: PostTypes}) {
               loop
               playsInline
               onClick={() => (window.location.href = shareUrl)}
+            /> */}
+            <LazyVideo
+              urlItem={post.url}
+              className="absolute inset-0 w-full h-full object-contain"
+              muteds={isMuted}
+              refs={mediaRef}
+              EventCLick={() => (window.location.href = shareUrl)}
             />
-            <VolumeControl 
-              isMuted={isMuted} 
-              onToggleMute={handleToggleMute}
-            />
+            //Probando un nuevo componente para cargar videos optimizados
+
+            <VolumeControl isMuted={isMuted} onToggleMute={handleToggleMute} />
           </>
         ) : (
-          <img
-            src={post.url}
-            alt="Post media"
+          
+          <LazyImage
+            urlItem={post.url}
             className="absolute inset-0 w-full h-full object-cover"
-          />
+          /> //Probando un nuevo componente para cargar imagenes optimizadas
         )}
       </div>
-      
-    
     </>
   );
 }

@@ -17,7 +17,6 @@ import {
   Users,
   ChevronDown,
   Grid,
-  ShoppingBag,
   PlayCircle,
   Menu,
   Bookmark,
@@ -38,6 +37,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChatBubbleIcon, StarFilledIcon } from '@radix-ui/react-icons'
 import { SearchInput } from './Search'
+import { LazyImage } from '../Personalizados/ImagePost'
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -129,7 +129,9 @@ export const  Layout: React.FC<LayoutProps> = ({ children }) => {
             {/*  */}
             <div className="flex items-center justify-end md:flex-1 lg:w-0">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={userData?.avatar_url|| undefined} alt={userData?.display_name} className='object-cover'/>
+                {/* <AvatarImage src={userData?.avatar_url || undefined} alt={userData?.display_name} className='object-cover' /> */}
+                <LazyImage urlItem={userData?.avatar_url ?? ''} className='object-cover' placeholder='Image' />
+                
                 <AvatarFallback>{userData?.display_name? getInitials(userData.display_name) : 'U'}</AvatarFallback>
               </Avatar>
 

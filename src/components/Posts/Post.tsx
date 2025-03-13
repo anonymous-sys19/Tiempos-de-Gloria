@@ -18,6 +18,7 @@ import { formatDate } from '@/utils/utils-format'
 import { PostTypes, Comment } from '@/types/postTypes/posts'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MediaViewer } from './ClipPost/MediaViewer'
+import { LazyImage } from '../Personalizados/ImagePost'
 
 
 export const Post = React.memo(({ post, onUserClick }: { post: PostTypes; onUserClick: (userId: string) => void }) => {
@@ -56,12 +57,14 @@ export const Post = React.memo(({ post, onUserClick }: { post: PostTypes; onUser
             // Si el tipo es imagen o está vacío, asumimos que es imagen por defecto
             return (
                 <div className="media-container">
-                    <img
+                    {/* <img
                         src={post.url}
                         alt="Imagen de publicación"
                         className="media-content"
                         onClick={() => (window.location.href = shareUrl)}
-                    />
+                    /> */}
+                    <LazyImage urlItem={post.url}
+                        className='media-content' EventClick={() => { window.location.href = shareUrl }} />
                 </div>
             );
         } else {

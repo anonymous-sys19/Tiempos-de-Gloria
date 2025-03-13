@@ -14,7 +14,8 @@ import { nanoid } from 'nanoid';
 import { SUPABASE_URL, STORAGE_BUCKET, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from '@/lib/constants';
 import { MediaFile } from '@/types/postTypes/media';
 import { validateFile, getInitials } from '@/utils/file-helpers';
-// import UploadForm from './UploadMusic';
+import { useUserProfile } from '@/hooks/ProfileUserData';
+
 
 const UseUploading = () => {
     const { user } = useAuth();
@@ -22,10 +23,11 @@ const UseUploading = () => {
     const [description, setDescription] = useState('');
     const [hashtags, setHashtags] = useState<string[]>([]);
     const [isUploading, setIsUploading] = useState(false);
-
     const { toast } = useToast();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const videoInputRef = useRef<HTMLInputElement>(null);
+
+    const { nUser } = useUserProfile()
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, isVideoUpload: boolean) => {
         if (!e.target.files) return;
@@ -160,18 +162,20 @@ const UseUploading = () => {
         <Card className="mb-6 bg-white dark:bg-gray-800">
             <CardContent className="pt-6">
                 <form onSubmit={handleUpload}>
+                        {nUser &&
                     <div className="flex items-center space-x-4">
-                        <Avatar>
-                            <AvatarImage src={user?.user_metadata.avatar_url} alt={user?.user_metadata.name} />
-                            <AvatarFallback>{user?.user_metadata.name ? getInitials(user.user_metadata.name) : 'U'}</AvatarFallback>
-                        </Avatar>
+                            <Avatar>
+                            <AvatarImage src={nUser.avatar_url ?? ''} alt={nUser.display_name ?? 'User'} />
+                            <AvatarFallback>{nUser.display_name ? getInitials(nUser.display_name) : 'U'}</AvatarFallback>
+                            </Avatar>
                         <Textarea
-                            placeholder={`¿Qué estás pensando, ${user?.user_metadata.name}?`}
+                            placeholder={`¿Qué estás pensando, ${nUser.display_name} ...`}
                             className="flex-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-blue-500 rounded-md"
                             value={description}
                             onChange={handleDescriptionChange}
-                        />
+                            />
                     </div>
+                        }
 
                     {hashtags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">

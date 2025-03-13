@@ -9,7 +9,7 @@ import PortalBiblico from '@/components/Rutas/BibliaApi/Portal-biblico/PortalBib
 import SermonesBiblicos from '@/components/Rutas/BibliaApi/Sermones/SermonesBiblicos'
 import MessengerChat from '@/components/chat/page'
 import { FaithDeclaration } from '@/components/Rutas/QuienesSomos/DeclaracionDeFe/DeclaracionDefe'
-import { PrincipiosPracticos } from '@//components/Rutas/QuienesSomos/principios-practicos/PrincipiosPracticos'
+import { PrincipiosPracticos } from '@/components/Rutas/QuienesSomos/principios-practicos/PrincipiosPracticos'
 
 import { TreeChart } from '@/components/Rutas/QuienesSomos/Estructura'
 import { churchData } from '@/data/churchData';
