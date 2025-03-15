@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Camera, MoreHorizontal } from "lucide-react"
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '@/supabaseClient'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { useAuth } from '@/hooks/userAuth'
 import { Layout } from "../Loyout/Loyout"
 import { Post } from "./Post"
@@ -21,8 +21,20 @@ export default function UserProfileWithSidebar() {
   const isAuthenticated = session?.user?.id
   const { userId } = useParams<{ userId: string }>()
   const { nUser, setUser, loading, error } = useUserProfile()  // Hooks From ProfileUserData
+  const [openEditProfile, setOpenEditProfile] = useState(false)
+  const location = useLocation()
 
   const navigate = useNavigate()
+
+  // Check for openProfileEdit parameter in URL
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const shouldOpenProfileEdit = searchParams.get('openProfileEdit') === 'true';
+    
+    if (shouldOpenProfileEdit) {
+      setOpenEditProfile(true);
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchUserMedia = async () => {
@@ -81,7 +93,7 @@ export default function UserProfileWithSidebar() {
     };
 
     fetchUserMedia();
-  }, [userId]);
+  }, [userId, setUser]);
 
   const handleUserClick = (userId: string) => {
     navigate(`/profile/${userId}`)
@@ -135,7 +147,10 @@ export default function UserProfileWithSidebar() {
                     </div>
                     <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                       <span className="text-xs sm:text-sm">
-                        <EditProfileDialog />
+                        <EditProfileDialog 
+                          defaultOpen={openEditProfile} 
+                          onOpenChange={setOpenEditProfile} 
+                        />
                       </span>
                       <Button
                         variant="secondary"

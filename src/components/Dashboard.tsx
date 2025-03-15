@@ -1,5 +1,5 @@
 
-import React, {  useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Newspaper, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -9,12 +9,68 @@ import { Post } from './Posts/Post';
 import BlogPage from './DayliVerse/PostDayliVerse';
 import UseUploading from './UploadingFiles/UseUploading';
 import { useFetchPosts } from '@/hooks/PostHooks/useFetchPosts';
+import { useAuth } from '@/hooks/userAuth';
+import { supabase } from '@/supabaseClient';
 
 
 export default function Dashboard() {
   const {posts} = useFetchPosts();
   const [activeMenu, setActiveMenu] = useState<'publicaciones' | 'dayliverse'>('publicaciones');
   const navigate = useNavigate();
+  const { session } = useAuth();
+  
+  useEffect(() => {
+    const checkProfileAndRedirect = async () => {
+      if (!session?.user) {
+        console.log('No session user found');
+        return;
+      }
+      
+      console.log('Checking profile for user ID:', session.user.id);
+      
+      // Check if user profile exists - don't use single() to avoid error handling complexity
+      const { data: profilesData, error: profileError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", session.user.id);
+      
+      console.log('Profile check result:', { profilesData, profileError });
+      
+      // Profile doesn't exist if we got an empty array or null data
+      const profileExists = profilesData && profilesData.length > 0;
+      console.log('Profile exists?', profileExists);
+      
+      // If profile doesn't exist, create it and redirect to edit profile
+      if (!profileExists && !profileError) {
+        const user = session.user;
+        // Insert the user in the profiles table if it doesn't exist
+        const { error: insertError } = await supabase
+          .from("profiles")
+          .insert({
+            id: user.id,
+            display_name:
+              user.user_metadata?.full_name ||
+              user.user_metadata?.name ||
+              "Usuario de Google",
+            avatar_url: user.user_metadata?.avatar_url || null,
+            portada_url:
+              "https://janbrtgwtomzffqqcmfo.supabase.co/storage/v1/object/public/idec-public/idec/portadaZona.jpg",
+            is_online: true,
+            last_seen: new Date().toISOString(),
+          });
+
+        if (insertError) {
+          console.error("Error creating profile:", insertError);
+        } else {
+          // Es un usuario nuevo, redirigir al perfil para editar
+          navigate(`/profile/${user.id}?openProfileEdit=true`);
+        }
+      }
+      // Si el perfil ya existe, no hacemos nada especial
+    };
+
+    checkProfileAndRedirect();
+  }, [session, navigate]);
 
   const handleUserClick = (userId: string) => {
     navigate(`/profile/${userId}`);

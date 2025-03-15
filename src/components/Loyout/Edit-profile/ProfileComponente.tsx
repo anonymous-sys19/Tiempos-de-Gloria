@@ -14,13 +14,18 @@ import { Label } from "@/components/ui/label"
 import { supabase } from '@/supabaseClient';
 // Asegúrate de tener configurado el cliente de Supabase
 
-export function EditProfileDialog() {
+interface EditProfileDialogProps {
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function EditProfileDialog({ defaultOpen = false, onOpenChange }: EditProfileDialogProps = {}) {
   const [displayName, setDisplayName] = useState("")
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(defaultOpen)
 
 
   useEffect(() => {
@@ -123,8 +128,16 @@ export function EditProfileDialog() {
   };
   
 
+  // Use the onOpenChange prop if provided
+  const handleOpenChange = (value: boolean) => {
+    setOpen(value);
+    if (onOpenChange) {
+      onOpenChange(value);
+    }
+  };
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
         <Button variant="default">Editar Perfil</Button>
       </SheetTrigger>
