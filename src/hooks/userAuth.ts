@@ -46,16 +46,48 @@ export function useAuth() {
   };
 
   const signInWithGoogle = async () => {
-    // Iniciar sesión con Google, siempre redirigiendo al dashboard
-    // La lógica para verificar si es un usuario nuevo se manejará en el Dashboard
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: window.location.origin + "/dashboard"
-      }
     });
 
     if (error) throw error;
+
+    // Esperar a que termine la autenticación
+    const { data: sessionData } = await supabase.auth.getSession();
+    const user = sessionData.session?.user;
+
+    if (user) {
+      try {
+        // Buscar el usuario en la tabla profiles
+        const { data: existingProfile, error: profileError } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("id", user.id)
+          .single();
+
+        if (!existingProfile && !profileError) {
+          // Insertar el usuario en la tabla profiles si no existe
+          const { error: insertError } = await supabase
+            .from("profiles")
+            .insert({
+              id: user.id,
+              display_name:
+                user.user_metadata?.full_name ||
+                user.user_metadata?.name ||
+                "Usuario de Google",
+              avatar_url: user.user_metadata?.avatar_url || null,
+              portada_url:
+                "https://janbrtgwtomzffqqcmfo.supabase.co/storage/v1/object/public/idec-public/idec/portadaZona.jpg",
+              is_online: true,
+              last_seen: new Date().toISOString(),
+            });
+
+          if (insertError) throw insertError;
+        }
+      } catch (err) {
+        console.error("Error gestionando el perfil del usuario:", err);
+      }
+    }
 
     return data;
   };

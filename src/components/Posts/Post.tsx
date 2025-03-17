@@ -36,9 +36,6 @@ export const Post = React.memo(({ post, onUserClick }: { post: PostTypes; onUser
     const [likedComments, setLikedComments] = useState<Set<string>>(new Set())
     const commentsEndRef = useRef<HTMLDivElement>(null)
 
-
-
-
     const renderMedia = () => {
         if (!post.url) {
             console.warn('No hay URL para el post.');

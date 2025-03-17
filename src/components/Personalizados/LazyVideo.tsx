@@ -1,63 +1,119 @@
-import { useState, useEffect } from "react";
+// Dependencies
+import { useState, useEffect, useRef } from "react";
+import { VolumeControl } from "../Posts/ClipPost/VolumeControl";
 
 interface LazyVideoProps {
   className?: string;
   urlItem: string;
-    placeholder?: string;
+  placeholder?: string;
   EventCLick?: () => void | string;
-  refs?: React.RefObject<HTMLVideoElement> | null | undefined | string;
+  refs?: React.Ref<HTMLVideoElement>;
   muteds?: boolean;
 }
 
 export const LazyVideo: React.FC<LazyVideoProps> = ({
   className = "",
   urlItem,
-    placeholder = "https://via.placeholder.com/300x200?text=Cargando+Video",
+  placeholder = "https://via.placeholder.com/300x200?text=Cargando+Video",
   EventCLick,
   refs,
   muteds,
 }) => {
-  const [videoSrc, setVideoSrc] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-
+  const setIsVisible = useState(false)[1];
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const mediaRef = useRef<HTMLVideoElement | null>(null);
+  const [ isMuted, setIsMuted ] = useState(false);
+const [isInView, setIsInView] = useState(false);
+  
   useEffect(() => {
-    const video = document.createElement("video");
-    video.src = urlItem;
-    video.onloadeddata = () => {
-      setVideoSrc(urlItem);
-      setLoading(false);
-    };
-    video.onerror = () => {
-      setVideoSrc(""); // No muestra video si hay error
-      setLoading(false);
-    };
-  }, [urlItem]);
+    observerRef.current = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          videoRef.current?.play(); // Reproduce si está visible
+          
+          
+        } else {
+          setIsVisible(false);
+          videoRef.current?.pause(); // Pausa si deja de ser visible
+        }
+      },
+      { threshold: 0.5 } // 50% del video debe estar en pantalla para activarse
+    );
 
+    if (videoRef.current) {
+      observerRef.current.observe(videoRef.current);
+    }
+
+    return () => observerRef.current?.disconnect();
+  }, []);
+
+  // 
+  
+  useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsInView(entry.isIntersecting);
+          if (mediaRef.current) {
+            if (entry.isIntersecting) {
+              mediaRef.current.play().catch(() => {});
+            } else {
+              mediaRef.current.pause();
+            }
+          }
+        },
+        { threshold: 0.5 }
+      );
+  
+      if (mediaRef.current) observer.observe(mediaRef.current);
+  
+      return () => observer.disconnect();
+    }, []);
+  
+    useEffect(() => {
+      const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+          if (isInView && mediaRef.current) {
+            event.preventDefault();
+            setIsMuted((prev) => {
+              mediaRef.current!.muted = !prev; // Aplicamos el cambio antes de actualizar el estado
+              return !prev;
+            });
+          }
+        }
+      };
+  
+      window.addEventListener("keydown", handleKeyPress);
+      return () => window.removeEventListener("keydown", handleKeyPress);
+    }, [isInView]);
+  
+  const handleToggleMute = () => {
+    if (mediaRef.current) {
+      setIsMuted((prev) => {
+        mediaRef.current!.muted = !prev;
+        return !prev;
+      });
+    }
+  };
   return (
     <div className={`${className} relative`}>
-      {loading && (
-        <img
-          src={placeholder}
-          alt="Placeholder"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-        />
-      )}
-      {videoSrc ? (
-        <video
-          src={videoSrc}
-          className={`w-full h-full ${loading ? "opacity-50" : "opacity-100"} transition-opacity duration-300`}
-          
-          autoPlay
-          loop
-          onClick={EventCLick}
-          ref={refs}
-          muted={muteds}
-          playsInline
-          
-        />
-      ) : (
-        <p className="text-center text-gray-500">Error al cargar el video</p>
-      )}
+      <video
+        ref={(el) => {
+          videoRef.current = el;
+          if (refs && typeof refs === 'function') refs(el);
+        }}
+        className={`w-full h-full transition-opacity duration-500`}
+        loop
+        muted={muteds}
+        playsInline
+        preload="metadata"
+        poster={placeholder}
+        onClick={EventCLick}
+      >
+        <source src={urlItem} type="video/mp4" />
+      </video>
+      <VolumeControl isMuted={isMuted} onToggleMute={handleToggleMute} />
     </div>
   );
 };
