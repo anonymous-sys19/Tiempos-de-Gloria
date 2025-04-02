@@ -1,60 +1,63 @@
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Camera, MoreHorizontal } from "lucide-react"
-import { useEffect } from 'react'
-import { supabase } from '@/supabaseClient'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useAuth } from '@/hooks/userAuth'
-import { Layout } from "../Loyout/Loyout"
-import { Post } from "./Post"
-import UseUploading from "../UploadingFiles/UseUploading"
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Camera, MoreHorizontal } from "lucide-react";
+import { useEffect } from "react";
+import { supabase } from "@/supabaseClient";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "@/data/hooks/userAuth";
+import { Layout } from "../Loyout/Loyout";
+import { Post } from "./Post";
+import UseUploading from "../UploadingFiles/UseUploading";
 
-import { useFetchPosts } from "@/hooks/PostHooks/useFetchPosts"
-import { EditProfileDialog } from "../Loyout/Edit-profile/ProfileComponente"
-import { LazyImage } from "../Personalizados/ImagePost"
-import { useUserProfile } from "@/hooks/ProfileUserData"
-
+import { useFetchPosts } from "@/data/hooks/PostHooks/useFetchPosts";
+import { EditProfileDialog } from "../Loyout/Edit-profile/ProfileComponente";
+import { LazyImage } from "../Personalizados/ImagePost";
+import { useUserProfile } from "@/data/hooks/ProfileUserData";
 
 export default function UserProfileWithSidebar() {
-  const { posts } = useFetchPosts() // Hooks From Posts
-  const { session } = useAuth()
-  const isAuthenticated = session?.user?.id
-  const { userId } = useParams<{ userId: string }>()
-  const { nUser, setUser, loading, error } = useUserProfile()  // Hooks From ProfileUserData
+  const { posts } = useFetchPosts(); // Hooks From Posts
+  const { session } = useAuth();
+  const isAuthenticated = session?.user?.id;
+  const { userId } = useParams<{ userId: string }>();
+  const { nUser, setUser, loading, error } = useUserProfile(); // Hooks From ProfileUserData
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserMedia = async () => {
       try {
         // Consultas a ambas tablas
         const fetchImages = supabase
-          .from('idectableimages')
-          .select(`*,
+          .from("idectableimages")
+          .select(
+            `*,
       profiles!idectableimages_user_id_fkey (
         id,
         display_name,
         avatar_url,
         portada_url
-    )`)
-          .eq('user_id', userId);
+    )`
+          )
+          .eq("user_id", userId);
 
         const fetchVideos = supabase
-          .from('idectablevideos')
-          .select(`*,
+          .from("idectablevideos")
+          .select(
+            `*,
           profiles(
             id,
             display_name,
             avatar_url,
             portada_url
-          )`)
-          .eq('user_id', userId);
+          )`
+          )
+          .eq("user_id", userId);
 
         // Ejecutar consultas en paralelo
-        const [{ data: images, error: imagesError }, { data: videos, error: videosError }] = await Promise.all([
-          fetchImages,
-          fetchVideos,
-        ]);
+        const [
+          { data: images, error: imagesError },
+          { data: videos, error: videosError },
+        ] = await Promise.all([fetchImages, fetchVideos]);
 
         // Manejar errores
         if (imagesError) throw imagesError;
@@ -62,21 +65,26 @@ export default function UserProfileWithSidebar() {
 
         // Combinar resultados
         const combinedMedia = [
-          ...(images?.map(item => ({ ...item, fileType: 'image' })) || []),
-          ...(videos?.map(item => ({ ...item, fileType: 'video' })) || []),
+          ...(images?.map((item) => ({ ...item, fileType: "image" })) || []),
+          ...(videos?.map((item) => ({ ...item, fileType: "video" })) || []),
         ];
 
         // Opcional: Ordenar por fecha de creación
-        combinedMedia.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        combinedMedia.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
 
         if (combinedMedia.length > 0) {
           // Aquí puedes elegir cómo manejar los datos (por ejemplo, establecer un usuario basado en el primer resultado)
           setUser(combinedMedia[0]); // Opcional: cambiar lógica si es necesario
         } else {
-          return (<div>Para ver tu perfil debes Subir almenos 1 Archivo valido</div>)
+          return (
+            <div>Para ver tu perfil debes Subir almenos 1 Archivo valido</div>
+          );
         }
       } catch (error) {
-        console.error('Error al obtener los medios del usuario:', error);
+        console.error("Error al obtener los medios del usuario:", error);
       }
     };
 
@@ -84,8 +92,8 @@ export default function UserProfileWithSidebar() {
   }, [userId]);
 
   const handleUserClick = (userId: string) => {
-    navigate(`/profile/${userId}`)
-  }
+    navigate(`/profile/${userId}`);
+  };
 
   return (
     <Layout>
@@ -103,8 +111,8 @@ export default function UserProfileWithSidebar() {
                 variant="secondary"
                 className="absolute bottom-4 right-4 text-xs sm:text-sm"
               >
-                <Camera className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Editar
-                foto de portada
+                <Camera className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Editar foto de
+                portada
               </Button>
             </div>
 
@@ -200,22 +208,15 @@ export default function UserProfileWithSidebar() {
             </Tabs>
           </div>
         </>
-      ) : (
-        loading ? (
-          <div className="max-w-4xl mx-auto py-16 text-center">
-            <p className="text-xl text-gray-500">
-              Cargando perfil...
-            </p>
-          </div> ) : ( error ? (
-          <div className="max-w-4xl mx-auto py-16 text-center">
-            <p className="text-xl text-gray-500">
-              {error}
-            </p>
-          </div>
-        ) : null
-        )
-      )}
+      ) : loading ? (
+        <div className="max-w-4xl mx-auto py-16 text-center">
+          <p className="text-xl text-gray-500">Cargando perfil...</p>
+        </div>
+      ) : error ? (
+        <div className="max-w-4xl mx-auto py-16 text-center">
+          <p className="text-xl text-gray-500">{error}</p>
+        </div>
+      ) : null}
     </Layout>
   );
 }
-

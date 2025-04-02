@@ -1,15 +1,13 @@
-
 // import SharedPost from '../ShareComponents/SharedPost';
-import { PostTypes } from "@/types/postTypes/posts";
+import { PostTypes } from "@/data/types/postTypes/posts";
 import { LazyImage } from "@/components/Personalizados/ImagePost";
 import { LazyVideo } from "@/components/Personalizados/LazyVideo";
 // import { useRef } from "react";
 
-export function MediaViewer({ post }: { post: PostTypes }, ) {
-  
+export function MediaViewer({ post }: { post: PostTypes }) {
   // const [isInView, setIsInView] = useState(false);
   // const [isMuted, setIsMuted] = useState(false);
-  
+
   const shareUrl = `${window.location.origin}/post/${post?.slug}`;
 
   // useEffect(() => {
@@ -48,8 +46,6 @@ export function MediaViewer({ post }: { post: PostTypes }, ) {
   //   window.addEventListener("keydown", handleKeyPress);
   //   return () => window.removeEventListener("keydown", handleKeyPress);
   // }, [isInView]);
-
-  
 
   return (
     <>

@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/supabaseClient"; // Asegúrate de importar bien Supabase
-import { UserType } from "@/types/postTypes/posts"; // Importar la interfaz UserProfile
+import { UserType } from "@/data/types/postTypes/posts"; // Importar la interfaz UserProfile
 // Definir la interfaz del usuario
-
 
 export const useUserProfile = () => {
   const [nUser, setUser] = useState<UserType | null>(null);

@@ -1,7 +1,14 @@
-import { Book, Hash, Share2, MessageCircle } from 'lucide-react';
+import { Book, Hash, Share2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { SermonType } from '@/types/postTypes/sermon';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { SermonType } from "@/data/types/postTypes/sermon";
 
 interface SermonCardProps {
   sermon: SermonType;
@@ -12,14 +19,18 @@ export function SermonCard({ sermon, onViewOutline }: SermonCardProps) {
   return (
     <Card className="mb-8 border-2 border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold text-blue-800 tracking-tight">{sermon.tema}</CardTitle>
+        <CardTitle className="text-3xl font-bold text-blue-800 tracking-tight">
+          {sermon.tema}
+        </CardTitle>
         <CardDescription className="flex items-center text-gray-600 text-lg">
           <Book className="mr-2" size={20} />
           {sermon.pasaje}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-gray-700 text-lg leading-relaxed">{sermon.contenido}</p>
+        <p className="text-gray-700 text-lg leading-relaxed">
+          {sermon.contenido}
+        </p>
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap gap-2">

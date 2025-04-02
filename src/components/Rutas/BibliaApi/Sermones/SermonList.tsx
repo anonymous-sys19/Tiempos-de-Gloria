@@ -1,5 +1,5 @@
-import { SermonType } from '@/types/postTypes/sermon';
-import { SermonCard } from './SermonCard';
+import { SermonType } from "@/data/types/postTypes/sermon";
+import { SermonCard } from "./SermonCard";
 
 interface SermonListProps {
   sermones: SermonType[];
@@ -10,14 +10,16 @@ export function SermonList({ sermones, onViewOutline }: SermonListProps) {
   if (sermones.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-xl text-gray-600">No se encontraron sermones que coincidan con tu búsqueda.</p>
+        <p className="text-xl text-gray-600">
+          No se encontraron sermones que coincidan con tu búsqueda.
+        </p>
       </div>
     );
   }
 
   return (
     <>
-      {sermones.map(sermon => (
+      {sermones.map((sermon) => (
         <SermonCard
           key={sermon.id}
           sermon={sermon}

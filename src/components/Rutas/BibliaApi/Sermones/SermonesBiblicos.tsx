@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { Header } from './Header';
-import { SearchBar } from './SearchBar';
-import { SermonList } from './SermonList';
-import { SermonOutline } from './SermonOutline';
-import { LoadingSpinner } from './Loading';
-import { ErrorDisplay } from './ErrorDisplay';
-import { useSermones } from '@/hooks/use-sermones';
-import { Layout } from '@/components/Loyout/Loyout';
+import { useState } from "react";
+import { Header } from "./Header";
+import { SearchBar } from "./SearchBar";
+import { SermonList } from "./SermonList";
+import { SermonOutline } from "./SermonOutline";
+import { LoadingSpinner } from "./Loading";
+import { ErrorDisplay } from "./ErrorDisplay";
+import { useSermones } from "@/data/hooks/use-sermones";
+import { Layout } from "@/components/Loyout/Loyout";
 export default function SermonesBiblicos() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedSermon, setSelectedSermon] = useState<string | null>(null);
   const { sermones, loading, error } = useSermones();
 
@@ -16,16 +16,17 @@ export default function SermonesBiblicos() {
     return <ErrorDisplay message={error} />;
   }
 
-  const filteredSermons = sermones.filter(sermon => {
+  const filteredSermons = sermones.filter((sermon) => {
     const searchLower = searchTerm.toLowerCase();
     return (
       sermon.tema.toLowerCase().includes(searchLower) ||
       sermon.pasaje.toLowerCase().includes(searchLower) ||
-      sermon.hashtags.some(tag => tag.toLowerCase().includes(searchLower))
+      sermon.hashtags.some((tag) => tag.toLowerCase().includes(searchLower))
     );
   });
 
-  const currentSermon = sermones.find(s => s.id === selectedSermon) || sermones[0];
+  const currentSermon =
+    sermones.find((s) => s.id === selectedSermon) || sermones[0];
 
   return (
     <Layout>
