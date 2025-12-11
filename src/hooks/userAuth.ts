@@ -76,7 +76,7 @@ export function useAuth() {
                 "Usuario de Google",
               avatar_url: user.user_metadata?.avatar_url || null,
               portada_url:
-                "https://janbrtgwtomzffqqcmfo.supabase.co/storage/v1/object/public/idec-public/idec/portadaZona.jpg",
+                "https://oayrpcwcmiimmmyaaylc.supabase.co/storage/v1/object/public/idec-public/idec/portadaZona.jpg",
               is_online: true,
               last_seen: new Date().toISOString(),
             });
